@@ -19,9 +19,31 @@ extra-source-files:
 # common to point users to the README.md file.
 description:         Please see the README on GitHub at <https://github.com/githubuser/advent-of-code#readme>
 
+default-extensions:
+  - DeriveGeneric
+  - LambdaCase
+  - OverloadedStrings
+  - RecordWildCards
+
+ghc-options:
+  - -Wall
+  - -Wcompat
+  - -Werror
+  - -Widentities
+  - -Wincomplete-record-updates
+  - -Wincomplete-uni-patterns
+  - -Wredundant-constraints
+  - -fhide-source-paths
+  - -fno-warn-warnings-deprecations
+  - -freverse-errors
+  - -fwarn-unused-binds
+  - -fwarn-unused-imports
+  - -fwarn-unused-matches
+
 dependencies:
 - base >= 4.7 && < 5
 - safe
+- text
 
 library:
   source-dirs: src

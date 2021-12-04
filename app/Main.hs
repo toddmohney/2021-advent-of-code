@@ -1,7 +1,11 @@
 module Main where
 
+import qualified Data.Text as T
 import qualified Safe
 import qualified System.Environment as Env
+
+import qualified DayOne.Lib as Day1
+import qualified DayTwo.Lib as Day2
 
 main :: IO ()
 main = do
@@ -10,48 +14,15 @@ main = do
     case Safe.headMay args of
         Nothing ->
             putStrLn "Missing filepath argument"
-        (Just inputFilepath) -> do
-            input <- map read . lines <$> readFile inputFilepath
-            putStrLn $ "Number of depth increases: " <> (show $ countDepthIncreases input)
-            putStrLn $ "Number of windowed depth increases: " <> (show $ countDepthIncreasesWindowed input)
+        (Just inputDir) -> do
+            input1 <- map read . lines <$> readFile (inputDir <> "/day1/input")
+            putStrLn $ "Day 1:"
+            putStrLn $ "Number of depth increases: " <> (show $ Day1.countDepthIncreases input1)
+            putStrLn $ "Number of windowed depth increases: " <> (show $ Day1.countDepthIncreasesWindowed input1)
+            putStrLn $ "--------------------------------------------"
 
-countDepthIncreases
-    :: [Int]
-    -> Int
-countDepthIncreases (depth:depths) = countDepthIncreases' 0 depth depths
-countDepthIncreases _ = 0
-
-
-countDepthIncreases'
-    :: Int
-    -> Int
-    -> [Int]
-    -> Int
-countDepthIncreases' currCount prevDepth [] =
-    currCount -- base case
-
-countDepthIncreases' currCount prevDepth (currDepth:depths)
-    | currDepth > prevDepth = countDepthIncreases' (currCount + 1) currDepth depths
-    | otherwise             = countDepthIncreases' currCount currDepth depths
-
-
-countDepthIncreasesWindowed
-    :: [Int]
-    -> Int
-countDepthIncreasesWindowed (depth1:depth2:depth3:depths) = countDepthIncreasesWindowed' 0 (sum [depth1, depth2, depth3]) (depth2:depth3:depths)
-countDepthIncreasesWindowed _ = 0
-
-
-countDepthIncreasesWindowed'
-    :: Int
-    -> Int
-    -> [Int]
-    -> Int
-countDepthIncreasesWindowed' currCount prevDepth (depth1:depth2:depth3:depths)
-    | (sum [depth1, depth2, depth3]) > prevDepth = countDepthIncreasesWindowed' (currCount + 1) (sum [depth1, depth2, depth3]) (depth2:depth3:depths)
-    | otherwise                                  = countDepthIncreasesWindowed' currCount (sum [depth1, depth2, depth3]) (depth2:depth3:depths)
-
-countDepthIncreasesWindowed' currCount _ _ =
-    currCount -- base case
-
-
+            input2 <- map T.pack . lines <$> readFile (inputDir <> "/day2/input")
+            putStrLn $ "Day 2:"
+            putStrLn $ "Total movement: " <> (show . Day2.getTotalMovement Day2.WithoutAimCalculation$ Day2.parseInput input2)
+            putStrLn $ "Total movement with aim: " <> (show . Day2.getTotalMovement Day2.WithAimCalculation$ Day2.parseInput input2)
+            putStrLn $ "--------------------------------------------"
